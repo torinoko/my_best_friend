@@ -1,22 +1,21 @@
+import os
 import pyaudio
 import wave
 import struct
 import math
-import config
 from groq import Groq
 
-def record_audio(filename="input.wav", silence_limit=0.5):
+def record_audio(filename="input.wav", silence_limit=1.0):
     CHUNK = 1024
     FORMAT = pyaudio.paInt16
-    CHANNELS = 2
-    RATE = 16000 
+    CHANNELS = 1
+    RATE = 48000
+    DEVICE_INDEX = 0
 
-    THRESHOLD = 1500 
-    CHUNKS_TO_START = 3
+    THRESHOLD = 30
+    CHUNKS_TO_START = 2
 
     p = pyaudio.PyAudio()
-
-    device_idx = getattr(config, 'DEVICE_INDEX', None) 
 
     try:
         stream = p.open(
@@ -24,11 +23,11 @@ def record_audio(filename="input.wav", silence_limit=0.5):
             channels=CHANNELS,
             rate=RATE,
             input=True,
-            input_device_index=device_idx,
+            input_device_index=DEVICE_INDEX,
             frames_per_buffer=CHUNK
         )
     except Exception as e:
-        print(f"⚠️ 指定デバイス(Index:{device_idx})で失敗しました。デフォルトを使います: {e}")
+        print(f"⚠️ 指定デバイス(Index:{DEVICE_INDEX})で失敗しました。デフォルトを使います: {e}")
         stream = p.open(
             format=FORMAT,
             channels=CHANNELS,
@@ -93,7 +92,7 @@ def listen(filename="input.wav"):
     if not record_audio(filename):
         return ""
 
-    client = Groq(api_key=config.GROQ_API_KEY)
+    client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
     try:
         with open(filename, "rb") as f:
             transcription = client.audio.transcriptions.create(

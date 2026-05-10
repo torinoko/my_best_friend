@@ -4,10 +4,9 @@ import json
 import random
 import subprocess
 import time
-import config
 
 def speak(text):
-    url = config.VOICEVOX_URL
+    url = os.environ.get("VOICEVOX_URL")
     speaker_id = 48
     
     try:
