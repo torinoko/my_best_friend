@@ -8,14 +8,29 @@ from groq import Groq
 def record_audio(filename="input.wav", silence_limit=1.0):
     CHUNK = 1024
     FORMAT = pyaudio.paInt16
-    CHANNELS = 1
-    RATE = 48000
+    CHANNELS = 2
+    RATE = 16000
     DEVICE_INDEX = 0
 
-    THRESHOLD = 30
+    THRESHOLD = 300
     CHUNKS_TO_START = 2
+    DEVICE_ADDRESS = 'hw:0,0'
 
     p = pyaudio.PyAudio()
+
+    target_index = None
+    for i in range(p.get_device_count()):
+        info = p.get_device_info_by_index(i)
+        if DEVICE_ADDRESS in info.get('name'):
+            target_index = i
+            break
+
+    # もし見つからなければ、名前の一部 "seeed" で探す
+    if target_index is None:
+        for i in range(p.get_device_count()):
+            if "seeed" in p.get_device_info_by_index(i).get('name'):
+                target_index = i
+                break
 
     try:
         stream = p.open(
@@ -51,6 +66,7 @@ def record_audio(filename="input.wav", silence_limit=1.0):
         shorts = struct.unpack("%dh" % count, data)
         sum_squares = sum(s**2 for s in shorts)
         rms = math.sqrt(sum_squares / count) if count > 0 else 0
+        #print(f"rms: {rms}")
 
         if not has_started_talking:
             if rms > THRESHOLD:
