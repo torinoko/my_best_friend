@@ -2,6 +2,7 @@ import os
 import re
 from dotenv import load_dotenv
 from openai import OpenAI, OpenAIError
+import mouth
 
 load_dotenv()
 
@@ -76,6 +77,8 @@ def generate_response(user_input: str) -> str:
     if not user_text:
         return "んん……？よくきこえなかったよ。もういっかい言ってくれる？"
 
+    mouth.start_thinking_voice()
+
     try:
         kwargs = {
             "model": MODEL,
@@ -90,6 +93,7 @@ def generate_response(user_input: str) -> str:
             kwargs["previous_response_id"] = _previous_response_id
 
         response = client.responses.create(**kwargs)
+
         _previous_response_id = response.id
 
         response_text = response.output_text.strip()
@@ -110,3 +114,6 @@ def generate_response(user_input: str) -> str:
         print(type(e))
         print(e)
         return "ごめんね……ちょっとびっくりしちゃった。"
+
+    finally:
+        mouth.stop_thinking_voice()
