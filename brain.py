@@ -1,6 +1,5 @@
 import os
 import re
-
 from dotenv import load_dotenv
 from openai import OpenAI, OpenAIError
 
@@ -48,13 +47,11 @@ SYSTEM_PROMPT = """
 
 _previous_response_id = None
 
-
 def _normalize_user_input(user_input: str) -> str:
     if user_input is None:
         return ""
 
     return re.sub(r"\s+", " ", str(user_input).strip())
-
 
 def _format_for_voicevox(text: str) -> str:
     text = text.strip()
@@ -70,7 +67,6 @@ def _format_for_voicevox(text: str) -> str:
         .replace("！", "……！")
         .replace("？", "……？")
     )
-
 
 def generate_response(user_input: str) -> str:
     global _previous_response_id

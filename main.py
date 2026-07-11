@@ -41,7 +41,5 @@ def main():
     except KeyboardInterrupt:
         print("\nまたおしゃべりしようね。ばいばい！")
 
-
 if __name__ == "__main__":
     main()
-

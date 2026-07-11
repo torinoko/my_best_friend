@@ -120,4 +120,3 @@ def listen(filename="input.wav"):
     except Exception as e:
         print(f"❌ 文字起こしエラー: {e}")
         return ""
-
