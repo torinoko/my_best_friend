@@ -41,7 +41,6 @@ def main() -> None:
             print("なの：考え中...")
             response_text = brain.generate_response(user_voice)
 
-            print(f"なの：{response_text}")
             mouth.speak(response_text)
 
             time.sleep(0.5)
