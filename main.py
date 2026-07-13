@@ -14,6 +14,9 @@ EXIT_KEYWORDS = [
     "さようなら",
 ]
 
+def should_exit(text: str) -> bool:
+    return any(keyword in text for keyword in EXIT_KEYWORDS)
+
 def main() -> None:
     print("------------------------------------------")
     print("   とりのこ システム 起動完了（音声対話モード）")
@@ -34,9 +37,9 @@ def main() -> None:
 
             print(f"文鳥: {user_voice}")
 
-            if user_voice in EXIT_KEYWORDS:
+            if should_exit(user_voice):
                 mouth.say_good_bye()
-                sys.exit()
+                break
 
             print("なの：考え中...")
             response_text = brain.generate_response(user_voice)
