@@ -12,7 +12,7 @@ def record_audio(filename="input.wav", silence_limit=1.0):
     RATE = 16000
     DEVICE_INDEX = 0
 
-    THRESHOLD = 300
+    THRESHOLD = 500
     CHUNKS_TO_START = 2
     DEVICE_ADDRESS = 'hw:0,0'
 
